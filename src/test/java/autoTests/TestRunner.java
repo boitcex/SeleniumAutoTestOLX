@@ -7,17 +7,18 @@ public class TestRunner extends SetupAndTeardown
 
 	TestSuite testSuite = new TestSuite();
 
+
 	@Test(enabled = true, groups = {"transport", "t1"}, priority = 1)
-	public void testDefaultFilters() throws Exception {
+	public void testDefaultFiltersValues() throws Exception {
 		CustomMethods.addTestNameToTheReport(
-				"Verify defaults filters",
+				"Verify that default values in filters are present",
 				Thread.currentThread().getStackTrace()[1].toString()
 		);
-		testSuite.verifyDefaultFilters(driver);
+		testSuite.verifyDefaultFiltersValues(driver);
 	}
 
 	@Test(enabled = true, groups = {"transport", "t2"}, priority = 2)
-	public void testVerifyPresentSomeMarks() throws Exception {
+	public void testThatPresentSomeMarks() throws Exception {
 		CustomMethods.addTestNameToTheReport(
 				"Check list of marks that current mark is current",
 				Thread.currentThread().getStackTrace()[1].toString()
@@ -28,7 +29,7 @@ public class TestRunner extends SetupAndTeardown
 	@Test(enabled = true, groups = {"transport", "t3"}, priority = 3)
 	public void negativeTestPriceFilters() throws Exception {
 		CustomMethods.addTestNameToTheReport(
-				"Check field price(entering letters)",
+				"Check field price(entering not numbers)",
 				Thread.currentThread().getStackTrace()[1].toString()
 		);
 			testSuite.verifyPriceFilter(driver,"@#DFG","$%SDFd");
@@ -40,9 +41,8 @@ public class TestRunner extends SetupAndTeardown
 				"Test price filters",
 				Thread.currentThread().getStackTrace()[1].toString()
 		);
-		testSuite.testPriceFiltersNormalWorking(driver,"100000","500000");
+		testSuite.verifyPriceFiltersWorking(driver,"100000","500000");
 	}
-
 
 	@Test(enabled = true, groups = {"transport", "t5"}, priority = 5)
 	public void testDistanceFilters() throws Exception {
@@ -50,17 +50,18 @@ public class TestRunner extends SetupAndTeardown
 				"Filtering by distance enter values",
 				Thread.currentThread().getStackTrace()[1].toString()
 		);
-		testSuite.verifyDistanceValue(driver,"50000","150000");
+		testSuite.verifyDistanceFilter(driver,"50000","150000");
 	}
 
 	@Test(enabled = true, groups = {"transport", "t6"}, priority = 6)
 	public void testCheckBox_TransmissionFilters() throws Exception {
 		CustomMethods.addTestNameToTheReport(
-				"Filtering by distance enter values",
+				"Testig transmissionCheckBox",
 				Thread.currentThread().getStackTrace()[1].toString()
 		);
-		testSuite.testCheckBoxTransmissionBox(driver);
+		testSuite.verifyTransmissionBox(driver);
 	}
+
 
 
 

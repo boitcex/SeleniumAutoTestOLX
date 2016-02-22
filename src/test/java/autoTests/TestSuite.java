@@ -6,7 +6,6 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 
-
 public class TestSuite extends CustomMethods
 {
 	ConfigurationVariables configVariables = ConfigurationVariables.getInstance();
@@ -15,7 +14,7 @@ public class TestSuite extends CustomMethods
 	public void verifyPresentSomeMarks(WebDriver driver, String mark) throws Exception {
 		CarPage carPage = new CarPage(driver);
 		carPage.getPage();
-		carPage.verifyPresentSomeMarks(mark);
+		carPage.verifyMarksFilterBySomeMark(mark);
 
 	}
 
@@ -23,8 +22,11 @@ public class TestSuite extends CustomMethods
 		CarPage carPage = new CarPage(driver);
 		carPage.getPage();
 		try {
-			carPage.enterPriceFrom(driver,from);
-			carPage.enterPriceTo(driver,to);
+			carPage.enterValueToPriceFilterFrom(driver,from);
+			carPage.verifyPriceFilter(driver,carPage.span_priceFrom,"");
+
+			carPage.enterValueToPriceFilterTo(driver,to);
+			carPage.verifyPriceFilter(driver,carPage.span_priceTo,"");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -32,7 +34,7 @@ public class TestSuite extends CustomMethods
 
 	}
 
-	public void verifyDefaultFilters(WebDriver driver) throws InterruptedException {
+	public void verifyDefaultFiltersValues(WebDriver driver) throws InterruptedException {
 		CustomMethods metods = new CustomMethods();
 		CarPage carPage = new CarPage(driver);
 		carPage.getPage();
@@ -53,18 +55,18 @@ public class TestSuite extends CustomMethods
 		metods.CheckElementPresent(carPage.span_colorType);
 	}
 
-	public void verifyDistanceValue(WebDriver driver,String distFrom, String distTo) throws Exception {
+	public void verifyDistanceFilter(WebDriver driver, String distFrom, String distTo) throws Exception {
 		CarPage carPage = new CarPage(driver);
 		carPage.getPage();
 
-		carPage.enterDistanceFrom(driver,distFrom);
-		carPage.enterDistanceTo(driver,distTo);
+		carPage.enterToDistanceFromFilter(driver,distFrom);
+		carPage.enterToDistanceToFilter(driver,distTo);
 
-		carPage.checkDistance(driver,carPage.span_distanceFrom,"от "+distFrom+" км");
-		carPage.checkDistance(driver,carPage.span_distanceTo,"до "+distTo+" км");
+		carPage.verifyDistanceFilter(driver,carPage.span_distanceFrom,"от "+distFrom+" км");
+		carPage.verifyDistanceFilter(driver,carPage.span_distanceTo,"до "+distTo+" км");
 	}
 
-	public void testPriceFiltersNormalWorking(WebDriver driver,String from,String to) throws Exception {
+	public void verifyPriceFiltersWorking(WebDriver driver, String from, String to) throws Exception {
 
 		int prFrom = Integer.parseInt(from);
 		int prTo= Integer.parseInt(to);
@@ -72,22 +74,40 @@ public class TestSuite extends CustomMethods
 		CarPage carPage = new CarPage(driver);
 		carPage.getPage();
 
-		new WebDriverWait(driver, 5).until(ExpectedConditions.visibilityOf(carPage.span_priceFrom));
-		carPage.span_priceFrom.click();
-		carPage.enter_field_priceFrom.sendKeys(from);
+		carPage.enterValueToPriceFilterFrom(driver,from);
+		carPage.enterValueToPriceFilterTo(driver,to);
 
-		new WebDriverWait(driver, 5).until(ExpectedConditions.visibilityOf(carPage.span_priceTo));
-		carPage.span_priceTo.click();
-		carPage.enter_field_priceTo.sendKeys(to);
-
-		carPage.verifyCheckedPrice(prFrom,prTo);
+		carPage.verifyCostOfCars(prFrom,prTo);
 
 	}
-	public void testCheckBoxTransmissionBox(WebDriver driver){
+
+	public void verifyTransmissionBox(WebDriver driver) throws Exception {
 		CarPage carPage = new CarPage(driver);
 		carPage.getPage();
 
-		carPage.selectTransBoxAll();
+		carPage.selectTransBox(driver,carPage.checkBox_clickMechanic);
+		carPage.verify_atrChecked(driver,carPage.checkBox_checkedAll,null);
+		carPage.verify_atrChecked(driver,carPage.checkBox_checkedMechanic,"true");
+		carPage.verify_atrChecked(driver,carPage.checkBox_checkedAutomation,null);
+		carPage.verify_atrChecked(driver,carPage.checkBox_checkedOther,null);
+
+		carPage.selectTransBox(driver,carPage.checkBox_clickAutomation);
+		carPage.verify_atrChecked(driver,carPage.checkBox_checkedAll,null);
+		carPage.verify_atrChecked(driver,carPage.checkBox_checkedMechanic,null);
+		carPage.verify_atrChecked(driver,carPage.checkBox_checkedAutomation,"true");
+		carPage.verify_atrChecked(driver,carPage.checkBox_checkedOther,null);
+
+		carPage.selectTransBox(driver,carPage.checkBox_clickOther);
+		carPage.verify_atrChecked(driver,carPage.checkBox_checkedAll,null);
+		carPage.verify_atrChecked(driver,carPage.checkBox_checkedMechanic,null);
+		carPage.verify_atrChecked(driver,carPage.checkBox_checkedAutomation,null);
+		carPage.verify_atrChecked(driver,carPage.checkBox_checkedOther,"true");
+
+		carPage.selectTransBox(driver,carPage.checkBox_clickAll);
+		carPage.verify_atrChecked(driver,carPage.checkBox_checkedAll,"true");
+		carPage.verify_atrChecked(driver,carPage.checkBox_checkedMechanic,null);
+		carPage.verify_atrChecked(driver,carPage.checkBox_checkedAutomation,null);
+		carPage.verify_atrChecked(driver,carPage.checkBox_checkedOther,null);
 
 	}
 
