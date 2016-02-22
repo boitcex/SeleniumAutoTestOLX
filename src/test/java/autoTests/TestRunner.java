@@ -7,13 +7,14 @@ public class TestRunner extends SetupAndTeardown
 
 	TestSuite testSuite = new TestSuite();
 
+
 	@Test(enabled = true, groups = {"transport", "t1"}, priority = 1)
 	public void testDefaultFilters() throws Exception {
 		CustomMethods.addTestNameToTheReport(
 				"Verify defaults filters",
 				Thread.currentThread().getStackTrace()[1].toString()
 		);
-		testSuite.verifyDefaultFilters(driver);
+		testSuite.verifyDefaultFiltersValues(driver);
 	}
 
 	@Test(enabled = true, groups = {"transport", "t2"}, priority = 2)
@@ -40,7 +41,7 @@ public class TestRunner extends SetupAndTeardown
 				"Test price filters",
 				Thread.currentThread().getStackTrace()[1].toString()
 		);
-		testSuite.testPriceFiltersNormalWorking(driver,"100000","500000");
+		testSuite.verifyPriceFiltersWorking(driver,"100000","500000");
 	}
 
 
@@ -50,17 +51,18 @@ public class TestRunner extends SetupAndTeardown
 				"Filtering by distance enter values",
 				Thread.currentThread().getStackTrace()[1].toString()
 		);
-		testSuite.verifyDistanceValue(driver,"50000","150000");
+		testSuite.verifyDistanceFilter(driver,"50000","150000");
 	}
 
 	@Test(enabled = true, groups = {"transport", "t6"}, priority = 6)
 	public void testCheckBox_TransmissionFilters() throws Exception {
 		CustomMethods.addTestNameToTheReport(
-				"Filtering by distance enter values",
+				"Testig transmissionCheckBox",
 				Thread.currentThread().getStackTrace()[1].toString()
 		);
-		testSuite.testCheckBoxTransmissionBox(driver);
+		testSuite.verifyTransmissionBox(driver);
 	}
+
 
 
 

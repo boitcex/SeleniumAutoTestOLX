@@ -27,10 +27,23 @@ public class CarPage {
     }
 
 
+    /******************************************************* Information *********************************************/
 
-    /******************************************************** Animation ************************************************/
+    /****************************************************** Images ***************************************************/
 
-    /*************************************************** Drop down list ********************************************/
+    /********************************************************* Buttons ***********************************************/
+
+    /********************************************************** Fields ***********************************************/
+
+    /******************************************************* RadioButton *********************************************/
+
+    /************************************************** Error message ************************************************/
+
+    /******************************************************** Links **************************************************/
+
+    /****************************************************
+     * Drop down list
+     ********************************************/
     //-------------------Default Filters-----------------//
     @FindBy(xpath = ".//span[@data-default-label='Марка']")
     public WebElement span_mark;
@@ -107,21 +120,10 @@ public class CarPage {
 
     @FindBy(xpath = "//li[@class='subcategory']/div/ul/li/a")
     public List<WebElement> marksPresent;
-    /******************************************************* Information ***********************************************/
 
-    /****************************************************** Images ***********************************************/
-
-    /********************************************************* Buttons *************************************************/
-
-    /********************************************************** Fields **************************************************/
-
-    /******************************************************* RadioButton **********************************************/
-
-    /************************************************** Error message *******************************************/
-
-    /******************************************************** Links **************************************************/
-
-    /******************************************************* Check-box*************************************************/
+    /********************************************************
+     * Check-box
+     ***********************************************/
     @FindBy(xpath = ".//span[@data-default-label='Коробка передач']")
     public WebElement span_transBox;
 
@@ -137,33 +139,39 @@ public class CarPage {
     @FindBy(xpath = ".//input[@id='f-all-filter_enum_transmission_type_24']")
     public WebElement checkBox_clickAll;
 
-
-    @FindBy(xpath = ".//label[@id='f-545_transmission_type']/input")
+    @FindBy(xpath = ".//input[@data-text='Механическая']")
     public WebElement checkBox_checkedMechanic;
 
-    @FindBy(xpath = ".//label[@id='f-546_transmission_type']/input")
+    @FindBy(xpath = ".//input[@data-text='Автоматическая']")
     public WebElement checkBox_checkedAutomation;
 
-    @FindBy(xpath = ".//label[@id='f-547_transmission_type']/input")
+    @FindBy(xpath = ".//input[@data-text='Другая']")
     public WebElement checkBox_checkedOther;
 
     @FindBy(xpath = ".//label[@for='f-all-filter_enum_transmission_type_24']/input")
     public WebElement checkBox_checkedAll;
 
 
-    /******************************************************** Methods **************************************************/
-    public void getPage()
-    {
+    @FindBy(xpath = ".//ul[@class='small suggestinput bgfff lheight20 br-3 abs select binded']/li/label/input")
+    public List<WebElement> checkBox_all;
+
+    /*********************************************************
+     * Methods
+     ************************************************/
+    public void getPage() {
         driver.navigate().to(configVariables.olxPage);
     }
 
-    public void enterDistanceFrom(WebDriver driver,String distFrom) {
+    public void enterToDistanceFromFilter(WebDriver driver, String distanceFrom) {
 
         try {
-            new WebDriverWait(driver, 5).until(ExpectedConditions.elementToBeClickable(span_distanceFrom));
+            new WebDriverWait(driver, configVariables.waitElement)
+                    .until(ExpectedConditions
+                            .elementToBeClickable(span_distanceFrom));
             span_distanceFrom.click();
-            new WebDriverWait(driver, 5).until(ExpectedConditions.elementToBeClickable(input_distanceFrom));
-            input_distanceFrom.sendKeys(distFrom);
+            new WebDriverWait(driver, configVariables.waitElement)
+                    .until(ExpectedConditions.elementToBeClickable(input_distanceFrom));
+            input_distanceFrom.sendKeys(distanceFrom);
             input_distanceFrom.sendKeys(Keys.ENTER);
 
         } catch (Exception e) {
@@ -171,40 +179,38 @@ public class CarPage {
         }
     }
 
-    public void enterDistanceTo(WebDriver driver,String distTo){
+    public void enterToDistanceToFilter(WebDriver driver, String distanceTo) {
         try {
-            new WebDriverWait(driver, 5).until(ExpectedConditions.elementToBeClickable(span_distanceTo));
+            new WebDriverWait(driver, configVariables.waitElement)
+                    .until(ExpectedConditions.elementToBeClickable(span_distanceTo));
             span_distanceTo.click();
-            new WebDriverWait(driver, 5).until(ExpectedConditions.elementToBeClickable(input_distanceTo));
-            input_distanceTo.sendKeys(distTo);
+            new WebDriverWait(driver, configVariables.waitElement)
+                    .until(ExpectedConditions.elementToBeClickable(input_distanceTo));
+            input_distanceTo.sendKeys(distanceTo);
             input_distanceTo.sendKeys(Keys.ENTER);
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
-
-
-
     }
 
-    public void checkDistance(WebDriver driver,WebElement actualWebElement,String expectedValue){
+    public void verifyDistanceFilter(WebDriver driver, WebElement actualWebElement, String expectedValue) {
         try {
-            new WebDriverWait(driver, 5).until(ExpectedConditions.visibilityOf(actualWebElement));
+            new WebDriverWait(driver, configVariables.waitElement).until(ExpectedConditions.visibilityOf(actualWebElement));
             String actualDistanceFrom = actualWebElement.getText();
-            assertEquals(expectedValue,actualDistanceFrom);
+            assertEquals(expectedValue, actualDistanceFrom);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
     }
 
-    public CarPage verifyPresentSomeMarks(String mark) throws Exception {
+    public CarPage verifyMarksFilterBySomeMark(String mark) {
         String realValue = "nothing!!!!";
         selectMark.click();
-        new WebDriverWait(driver, 5).until(ExpectedConditions.visibilityOfAllElements(this.marksPresent));
+        new WebDriverWait(driver, configVariables.waitElement)
+                .until(ExpectedConditions.visibilityOfAllElements(this.marksPresent));
         for (WebElement element : marksOfCars) {
-            String newList = workWithRegex(element.getText(), "(\\w+)");
+            String newList = workWithMarksUsingRegex(element.getText(), "(\\w+)");
             if (mark.equals(newList)) {
                 realValue = newList;
                 break;
@@ -215,7 +221,7 @@ public class CarPage {
         return this;
     }
 
-    public String workWithRegex(String line, String regex) {
+    public String workWithMarksUsingRegex(String line, String regex) {
         String ans = "";
         Pattern r = Pattern.compile(regex);
         Matcher m = r.matcher(line);
@@ -225,16 +231,16 @@ public class CarPage {
         return ans;
     }
 
-    public void verifyCheckedPrice(int min, int max) throws Exception {
-        new WebDriverWait(driver, 5).until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.xpath(".//p[@class='price']/strong")));
-
+    public void verifyCostOfCars(int minCost, int maxCost) throws Exception {
         int costs;
+        new WebDriverWait(driver, configVariables.waitElement)
+                .until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.xpath(".//p[@class='price']/strong")));
+
         for (WebElement element : check_cost) {
             String str = element.getText();
             System.out.printf(str);
             costs = convertStringToIntegerUsingRegex(str);
-            //System.out.println(cost);
-            if (costs < min && costs > max) {
+            if (costs < minCost && costs > maxCost) {
                 throw new Exception("ERROR!Price filter doesn`t work");
             }
         }
@@ -251,8 +257,30 @@ public class CarPage {
         return Integer.parseInt(ans);
     }
 
-    public void enterPriceFrom(WebDriver driver, String from) throws Exception {
-        new WebDriverWait(driver, 5).until(ExpectedConditions.visibilityOf(span_priceFrom));
+    public void enterValueToPriceFilterFrom(WebDriver driver, String value){
+        new WebDriverWait(driver, configVariables.waitElement)
+                .until(ExpectedConditions.visibilityOf(span_priceFrom));
+        span_priceFrom.click();
+        enter_field_priceFrom.sendKeys(value);
+    }
+
+    public void enterValueToPriceFilterTo(WebDriver driver, String value){
+        new WebDriverWait(driver, configVariables.waitElement)
+                .until(ExpectedConditions.visibilityOf(span_priceFrom));
+        span_priceFrom.click();
+        enter_field_priceTo.sendKeys(value);
+    }
+
+    public void verifyPriceFilter(WebDriver driver,WebElement elementForVerify, String expected){
+        new WebDriverWait(driver, configVariables.waitElement)
+                .until(ExpectedConditions.visibilityOf(elementForVerify));
+        elementForVerify.click();
+        String actual = elementForVerify.getText();
+        assertEquals(actual, expected);
+    }
+
+/*    public void enterPriceFrom(WebDriver driver, String from) throws Exception {
+        new WebDriverWait(driver, configVariables.waitElement).until(ExpectedConditions.visibilityOf(span_priceFrom));
         span_priceFrom.click();
         enter_field_priceFrom.sendKeys(from);
         String actual = span_priceFrom.getText();
@@ -261,27 +289,26 @@ public class CarPage {
     }
 
     public void enterPriceTo(WebDriver driver, String to) throws Exception {
-        new WebDriverWait(driver, 5).until(ExpectedConditions.visibilityOf(span_priceTo));
+        new WebDriverWait(driver, configVariables.waitElement).until(ExpectedConditions.visibilityOf(span_priceTo));
         span_priceTo.click();
         enter_field_priceTo.sendKeys(to);
         String actual = span_priceTo.getText();
         assertEquals(actual, "");
 
-    }
+    }*/
 
-    public void selectTransBoxAll(){
-        new WebDriverWait(driver, 5).until(ExpectedConditions.visibilityOf(span_priceTo));
+
+    public void selectTransBox(WebDriver driver, WebElement checkboxElement) {
+        new WebDriverWait(driver, configVariables.waitElement).until(ExpectedConditions.visibilityOf(span_transBox));
         span_transBox.click();
-        new WebDriverWait(driver, 5).until(ExpectedConditions.visibilityOf(checkBox_clickAll));
-        checkBox_clickAll.click();
-
+        new WebDriverWait(driver, configVariables.waitElement).until(ExpectedConditions.visibilityOf(checkboxElement));
+        checkboxElement.click();
     }
-    public void selectTransBoxMechanic(){
-        new WebDriverWait(driver, 5).until(ExpectedConditions.visibilityOf(span_priceTo));
+
+    public void verify_atrChecked(WebDriver driver, WebElement elementForAssert, String expectedResult) {
+        new WebDriverWait(driver, configVariables.waitElement).until(ExpectedConditions.visibilityOf(span_transBox));
         span_transBox.click();
-        new WebDriverWait(driver, 5).until(ExpectedConditions.visibilityOf(checkBox_clickMechanic));
-
+        assertEquals(elementForAssert.getAttribute("checked"), expectedResult);
     }
-
 
 }
