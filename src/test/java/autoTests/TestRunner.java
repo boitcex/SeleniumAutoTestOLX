@@ -26,16 +26,25 @@ public class TestRunner extends SetupAndTeardown
 	}
 
 	@Test(enabled = true, groups = {"transport", "t3"}, priority = 3)
-	public void testPriceFilters() throws Exception {
+	public void negativeTestPriceFilters() throws Exception {
 		CustomMethods.addTestNameToTheReport(
 				"Check field price(entering letters)",
 				Thread.currentThread().getStackTrace()[1].toString()
 		);
-		testSuite.enterPriceFrom(driver, "qwr", "");
-		testSuite.enterPriceTo(driver, "qwr#$", "");
+			testSuite.verifyPriceFilter(driver,"@#DFG","$%SDFd");
 	}
 
-	@Test(enabled = true, groups = {"transport", "t3"}, priority = 4)
+	@Test(enabled = true, groups = {"transport", "t4"}, priority = 4)
+	public void testPriceFilters() throws Exception {
+		CustomMethods.addTestNameToTheReport(
+				"Test price filters",
+				Thread.currentThread().getStackTrace()[1].toString()
+		);
+		testSuite.testPriceFiltersNormalWorking(driver,"100000","500000");
+	}
+
+
+	@Test(enabled = true, groups = {"transport", "t5"}, priority = 5)
 	public void testDistanceFilters() throws Exception {
 		CustomMethods.addTestNameToTheReport(
 				"Filtering by distance enter values",
@@ -43,6 +52,16 @@ public class TestRunner extends SetupAndTeardown
 		);
 		testSuite.verifyDistanceValue(driver,"50000","150000");
 	}
+
+	@Test(enabled = true, groups = {"transport", "t6"}, priority = 6)
+	public void testCheckBox_TransmissionFilters() throws Exception {
+		CustomMethods.addTestNameToTheReport(
+				"Filtering by distance enter values",
+				Thread.currentThread().getStackTrace()[1].toString()
+		);
+		testSuite.testCheckBoxTransmissionBox(driver);
+	}
+
 
 
 

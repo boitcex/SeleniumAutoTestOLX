@@ -76,17 +76,15 @@ public class CarPage {
 
     //-------------------Price---------------------------//
 
-    @FindBy(xpath = ".//input[@name='search[filter_float_motor_mileage:from]']")
+    @FindBy(xpath = "(//input[@value=''])[7]")
     public WebElement enter_field_priceFrom;
 
-    @FindBy(xpath = ".//input[@name='search[filter_float_motor_mileage:to]']")
+    @FindBy(xpath = "(//input[@value=''])[8]")
     public WebElement enter_field_priceTo;
 
     @FindBy(xpath = ".//p[@class='price']/strong")
     public List<WebElement> check_cost;
 
-    @FindBy(xpath = ".//p[@class='price']/strong")
-    public WebElement check_cost2;
 
     //-------------------Distance---------------------------//
     @FindBy(xpath = "(//input[@value=''])[11]")
@@ -124,6 +122,34 @@ public class CarPage {
     /******************************************************** Links **************************************************/
 
     /******************************************************* Check-box*************************************************/
+    @FindBy(xpath = ".//span[@data-default-label='Коробка передач']")
+    public WebElement span_transBox;
+
+    @FindBy(xpath = ".//label[@data-text='Механическая']/span")
+    public WebElement checkBox_clickMechanic;
+
+    @FindBy(xpath = ".//label[@data-text='Автоматическая']/span")
+    public WebElement checkBox_clickAutomation;
+
+    @FindBy(xpath = ".//label[@data-text='Другая']/span")
+    public WebElement checkBox_clickOther;
+
+    @FindBy(xpath = ".//input[@id='f-all-filter_enum_transmission_type_24']")
+    public WebElement checkBox_clickAll;
+
+
+    @FindBy(xpath = ".//label[@id='f-545_transmission_type']/input")
+    public WebElement checkBox_checkedMechanic;
+
+    @FindBy(xpath = ".//label[@id='f-546_transmission_type']/input")
+    public WebElement checkBox_checkedAutomation;
+
+    @FindBy(xpath = ".//label[@id='f-547_transmission_type']/input")
+    public WebElement checkBox_checkedOther;
+
+    @FindBy(xpath = ".//label[@for='f-all-filter_enum_transmission_type_24']/input")
+    public WebElement checkBox_checkedAll;
+
 
     /******************************************************** Methods **************************************************/
     public void getPage()
@@ -144,7 +170,6 @@ public class CarPage {
             e.printStackTrace();
         }
     }
-
 
     public void enterDistanceTo(WebDriver driver,String distTo){
         try {
@@ -202,9 +227,11 @@ public class CarPage {
 
     public void verifyCheckedPrice(int min, int max) throws Exception {
         new WebDriverWait(driver, 5).until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.xpath(".//p[@class='price']/strong")));
+
         int costs;
         for (WebElement element : check_cost) {
             String str = element.getText();
+            System.out.printf(str);
             costs = convertStringToIntegerUsingRegex(str);
             //System.out.println(cost);
             if (costs < min && costs > max) {
@@ -214,76 +241,6 @@ public class CarPage {
 
     }
 
-
-/*
-
-
-    //-------------------Buttons---------------------------//
-    @FindBy(id = "search-submit")
-    public WebElement button_found;
-
-    //--------------------Elements--------------------//
-    public CarPage() {
-        PageFactory.initElements(driver, this);
-    }
-
-
-
-
-
-
-
-    //-------------------Field search and checkbox-----------//
-    @FindBy(id = "search-text")
-    public WebElement searchField;
-
-    @FindBy(xpath = "./*/
-/*[@relname='search[photos]']")
-    public WebElement checkbox_photoOnly;
-
-    @FindBy(xpath = "./*/
-/*[@relname='search[description]']")
-    public WebElement checkbox_searchDescription;
-
-
-    //-------------------Transmission box---------------------------//
-    @FindBy(xpath = ".//span[@data-default-label='Коробка передач']")
-    public WebElement trans_box_click;
-
-    @FindBy(xpath = ".//input[@id='f-all-filter_enum_transmission_type_24']")
-    public WebElement trans_box_check_selectAll;
-
-    @FindBy(xpath = "./*/
-/*[@class='filter-item rel filter-item-transmission_type']//input")
-    public List<WebElement> trans_box_click_select;
-
-    //---------//
-*/
-
-
-   /* public enum TypeTransmissions {
-        Механическая,
-        Автоматическая,
-        Другая
-    }
-
-    public CarPage selectTransmissionBox(Enum typeTransmissionBox) {
-
-        new WebDriverWait(driver, 5, 1).until(ExpectedConditions.elementToBeClickable(trans_box_click));
-        trans_box_click.click();
-        driver.findElement(By.xpath(".//label[@class='select-only-this-opiton inlblk value c27 lheight18 active-filter']/span[text()='" + typeTransmissionBox + "']")).click();
-        return this;
-    }*/
-   /* public CarPage checkTransmissionsBox(Enum typeTransmissionBox){
-        WebElement assertCheckBox = driver.findElement(By.xpath(".//input[@data-text='"+typeTransmissionBox+"']")).getAttribute();
-        return this;
-    }*/
-
-
-    //--------------------Metods--------------------//
-
-
-
     public static int convertStringToIntegerUsingRegex(String line) {
         String ans = "";
         Pattern r = Pattern.compile("[0-9]+");
@@ -292,6 +249,38 @@ public class CarPage {
             ans += m.group(0);
         }
         return Integer.parseInt(ans);
+    }
+
+    public void enterPriceFrom(WebDriver driver, String from) throws Exception {
+        new WebDriverWait(driver, 5).until(ExpectedConditions.visibilityOf(span_priceFrom));
+        span_priceFrom.click();
+        enter_field_priceFrom.sendKeys(from);
+        String actual = span_priceFrom.getText();
+        assertEquals(actual, "");
+
+    }
+
+    public void enterPriceTo(WebDriver driver, String to) throws Exception {
+        new WebDriverWait(driver, 5).until(ExpectedConditions.visibilityOf(span_priceTo));
+        span_priceTo.click();
+        enter_field_priceTo.sendKeys(to);
+        String actual = span_priceTo.getText();
+        assertEquals(actual, "");
+
+    }
+
+    public void selectTransBoxAll(){
+        new WebDriverWait(driver, 5).until(ExpectedConditions.visibilityOf(span_priceTo));
+        span_transBox.click();
+        new WebDriverWait(driver, 5).until(ExpectedConditions.visibilityOf(checkBox_clickAll));
+        checkBox_clickAll.click();
+
+    }
+    public void selectTransBoxMechanic(){
+        new WebDriverWait(driver, 5).until(ExpectedConditions.visibilityOf(span_priceTo));
+        span_transBox.click();
+        new WebDriverWait(driver, 5).until(ExpectedConditions.visibilityOf(checkBox_clickMechanic));
+
     }
 
 

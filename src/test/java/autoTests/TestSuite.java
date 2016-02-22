@@ -1,13 +1,11 @@
 package autoTests;
 
-import autoTests.pages.*;
-//import net.lightbody.bmp.BrowserMobProxy;
+import autoTests.pages.CarPage;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import static org.testng.Assert.assertEquals;
+
 
 public class TestSuite extends CustomMethods
 {
@@ -17,38 +15,20 @@ public class TestSuite extends CustomMethods
 	public void verifyPresentSomeMarks(WebDriver driver, String mark) throws Exception {
 		CarPage carPage = new CarPage(driver);
 		carPage.getPage();
-		String realValue = "nothing!!!!";
-		carPage.selectMark.click();
-		for (WebElement element : carPage.marksOfCars) {
-			String newList = carPage.workWithRegex(element.getText(), "(\\w+)");
-			if (mark.equals(newList)) {
-				realValue = newList;
-				break;
-			}
+		carPage.verifyPresentSomeMarks(mark);
 
+	}
+
+	public void verifyPriceFilter(WebDriver driver,String from,String to){
+		CarPage carPage = new CarPage(driver);
+		carPage.getPage();
+		try {
+			carPage.enterPriceFrom(driver,from);
+			carPage.enterPriceTo(driver,to);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		assertEquals(realValue, mark);
-	}
 
-	public void enterPriceFrom(WebDriver driver, String from, String expected) throws Exception {
-		CarPage carPage = new CarPage(driver);
-		carPage.getPage();
-		new WebDriverWait(driver, 5).until(ExpectedConditions.visibilityOf(carPage.span_priceFrom));
-		carPage.span_priceFrom.click();
-		carPage.enter_field_priceFrom.sendKeys(from);
-		String actual = carPage.span_priceFrom.getText();
-		assertEquals(actual, expected);
-
-	}
-
-	public void enterPriceTo(WebDriver driver, String to, String expected) throws Exception {
-		CarPage carPage = new CarPage(driver);
-		carPage.getPage();
-		new WebDriverWait(driver, 5).until(ExpectedConditions.visibilityOf(carPage.span_priceTo));
-		carPage.span_priceTo.click();
-		carPage.enter_field_priceTo.sendKeys(to);
-		String actual = carPage.span_priceTo.getText();
-		assertEquals(actual, expected);
 
 	}
 
@@ -101,6 +81,13 @@ public class TestSuite extends CustomMethods
 		carPage.enter_field_priceTo.sendKeys(to);
 
 		carPage.verifyCheckedPrice(prFrom,prTo);
+
+	}
+	public void testCheckBoxTransmissionBox(WebDriver driver){
+		CarPage carPage = new CarPage(driver);
+		carPage.getPage();
+
+		carPage.selectTransBoxAll();
 
 	}
 

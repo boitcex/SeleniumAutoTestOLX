@@ -1,11 +1,6 @@
 package autoTests;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.Select;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.Reporter;
 
@@ -13,56 +8,12 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 
 
 public class CustomMethods {
 
     ConfigurationVariables configVariables = ConfigurationVariables.getInstance();
 
-    public void waitForElementRemoved(WebDriver driver, By locator, int timeoutInSeconds, int pollingInterval)
-            throws Exception {
-        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds, pollingInterval);
-        wait.until(ExpectedConditions.invisibilityOfElementLocated(locator));
-    }
-
-    public void waitForElementRemoved(WebDriver driver, WebElement webElement, int timeoutInSeconds, int pollingInterval)
-            throws Exception {
-        driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
-
-        boolean flag = true;
-        int counter = 0;
-        while (flag) {
-            if (counter > (int) (timeoutInSeconds * 1000 / pollingInterval)) {
-                flag = false;
-                throw new Exception("Ошибка во время выполнения теста. " +
-                        "В метод waitForElementRemoved передан WebElement " +
-                        webElement +
-                        " который не удаляется"
-                );
-            }
-            try {
-                Thread.sleep(pollingInterval);
-                counter++;
-                if (!webElement.isDisplayed()) flag = false;
-            } catch (Exception e) {
-                flag = false;
-            }
-        }
-        driver.manage().timeouts().implicitlyWait(configVariables.implicitTimeWait, TimeUnit.SECONDS);
-    }
-
-    public void waitForElementPresent(WebDriver driver, By locator, int timeoutInSeconds, int pollingInterval)
-            throws Exception {
-        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds, pollingInterval);
-        wait.until(ExpectedConditions.visibilityOf(driver.findElement(locator)));
-    }
-
-    public void waitForElementPresent(WebDriver driver, WebElement webElement, int timeoutInSeconds, int pollingInterval)
-            throws Exception {
-        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds, pollingInterval);
-        wait.until(ExpectedConditions.visibilityOf(webElement));
-    }
 
     public Calendar getCurrentCalendar() {
 
@@ -120,41 +71,10 @@ public class CustomMethods {
         }
     }
 
-    //convert from UTF-8 -> internal Java String format
-    public String convertFromUTF8(String s) {
-        String out = null;
-        try {
-            out = new String(s.getBytes("Windows-1251"), "UTF-8");
-        } catch (java.io.UnsupportedEncodingException e) {
-            return null;
-        }
-        return out;
-    }
-
-    //convert from internal Java String format -> UTF-8
-    public String convertToUTF8(String s) {
-        String out = null;
-        try {
-            out = new String(s.getBytes("UTF-8"), "Windows-1251");
-        } catch (java.io.UnsupportedEncodingException e) {
-            return null;
-        }
-        return out;
-    }
-
-    //Проверяем что элемент присутствует и видем
+    //Проверяем что элемент присутствует и виден
     public void CheckElementPresent(WebElement element) throws InterruptedException {
         Assert.assertEquals(true, element.isDisplayed());
         Assert.assertEquals(true, element.isEnabled());
-    }
-
-    public void choseElementFromListBox(WebElement listbox, String aim) {
-        Select droplist = new Select(listbox);
-        droplist.selectByValue(aim);
-    }
-
-    public void addStepToTheReport(String stepName) throws Exception {
-        Reporter.log("<b>" + stepName + "</b><br>");
     }
 
     public static void addTestNameToTheReport(String testName, String methodPath) throws Exception {
