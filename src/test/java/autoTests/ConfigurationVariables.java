@@ -35,6 +35,7 @@ public class ConfigurationVariables {
     public String olxPage;
     public String currentBrowser;
     public int technicalPause;
+    public int waitElement;
     public int implicitTimeWait;
     public int waitPageForLoad;
     public String chromeDriverDirectory;
@@ -57,6 +58,7 @@ public class ConfigurationVariables {
         technicalPause = Integer.parseInt(getProperty(configurationData, "technicalPause"));
         implicitTimeWait = Integer.parseInt(getProperty(configurationData, "implicitTimeWait"));
         waitPageForLoad = Integer.parseInt(getProperty(configurationData, "waitPageForLoad"));
+        waitElement = Integer.parseInt(getProperty(configurationData, "waitElement"));
     }
 
     //возвращаем инстанс объекта
