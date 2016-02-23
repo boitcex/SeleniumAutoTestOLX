@@ -36,6 +36,7 @@ public class SetupAndTeardown {
 		switch (Integer.parseInt(configVariables.currentBrowser))
 		{
 			case 0:
+				File profileDir = new File(configVariables.firefoxDirectoryLocalMachine);
 				FirefoxProfile firefoxProfile = new FirefoxProfile(profileDir);
 				firefoxProfile.setEnableNativeEvents(false);
 				firefoxProfile.setAcceptUntrustedCertificates(true);

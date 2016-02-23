@@ -240,7 +240,6 @@ public class CarPage {
                     .until(ExpectedConditions.presenceOfElementLocated(By.xpath(".//p[@class='price']/strong")));
         for (WebElement element : check_cost) {
             String str = element.getText();
-            System.out.printf(str);
             costs = convertStringToIntegerUsingRegex(str);
             if (costs < minCost && costs > maxCost) {
                 throw new Exception("ERROR!Price filter doesn`t work");
@@ -271,6 +270,8 @@ public class CarPage {
         new WebDriverWait(driver, configVariables.waitElement)
                 .until(ExpectedConditions.visibilityOf(span_priceTo));
         span_priceTo.click();
+        new WebDriverWait(driver, configVariables.waitElement)
+                .until(ExpectedConditions.visibilityOf(enter_field_priceTo));
         enter_field_priceTo.sendKeys(value);
         searchButton.click();
     }
@@ -282,25 +283,6 @@ public class CarPage {
         String actual = elementForVerify.getText();
         assertEquals(actual, expected);
     }
-
-/*    public void enterPriceFrom(WebDriver driver, String from) throws Exception {
-        new WebDriverWait(driver, configVariables.waitElement).until(ExpectedConditions.visibilityOf(span_priceFrom));
-        span_priceFrom.click();
-        enter_field_priceFrom.sendKeys(from);
-        String actual = span_priceFrom.getText();
-        assertEquals(actual, "");
-
-    }
-
-    public void enterPriceTo(WebDriver driver, String to) throws Exception {
-        new WebDriverWait(driver, configVariables.waitElement).until(ExpectedConditions.visibilityOf(span_priceTo));
-        span_priceTo.click();
-        enter_field_priceTo.sendKeys(to);
-        String actual = span_priceTo.getText();
-        assertEquals(actual, "");
-
-    }*/
-
 
     public void selectTransBox(WebDriver driver, WebElement checkboxElement) {
         new WebDriverWait(driver, configVariables.waitElement).until(ExpectedConditions.visibilityOf(span_transBox));
