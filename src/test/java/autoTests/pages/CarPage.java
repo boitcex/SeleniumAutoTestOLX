@@ -237,7 +237,7 @@ public class CarPage {
         int costs;
         new WebDriverWait(driver, configVariables.waitElement)
                 //.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.xpath(".//p[@class='price']/strong")));
-                    .until(ExpectedConditions.presenceOfElementLocated(By.xpath(".//p[@class='price']/strong")));
+                .until(ExpectedConditions.presenceOfElementLocated(By.xpath(".//p[@class='price']/strong")));
         for (WebElement element : check_cost) {
             String str = element.getText();
             costs = convertStringToIntegerUsingRegex(str);
@@ -258,28 +258,31 @@ public class CarPage {
         return Integer.parseInt(ans);
     }
 
-    public void enterValueToPriceFilterFrom(WebDriver driver, String value){
+    public void enterValueToPriceFilterFrom(WebDriver driver, String value) {
         new WebDriverWait(driver, configVariables.waitElement)
-                .until(ExpectedConditions.visibilityOf(span_priceFrom));
+                .until(ExpectedConditions.elementToBeClickable(span_priceFrom));
         span_priceFrom.click();
         enter_field_priceFrom.sendKeys(value);
-        searchButton.click();
+        new WebDriverWait(driver, configVariables.waitElement)
+                .until(ExpectedConditions.visibilityOf(enter_field_priceFrom));
     }
 
-    public void enterValueToPriceFilterTo(WebDriver driver, String value){
+    public void enterValueToPriceFilterTo(WebDriver driver, String value) {
         new WebDriverWait(driver, configVariables.waitElement)
-                .until(ExpectedConditions.visibilityOf(span_priceTo));
+                .until(ExpectedConditions.elementToBeClickable(span_priceTo));
         span_priceTo.click();
         new WebDriverWait(driver, configVariables.waitElement)
                 .until(ExpectedConditions.visibilityOf(enter_field_priceTo));
         enter_field_priceTo.sendKeys(value);
+        new WebDriverWait(driver, configVariables.waitElement)
+                .until(ExpectedConditions.visibilityOf(enter_field_priceTo));
         searchButton.click();
     }
 
-    public void verifyPriceFilter(WebDriver driver,WebElement elementForVerify, String expected){
+    public void verifyPriceFilter(WebDriver driver, WebElement elementForVerify, String expected) {
         new WebDriverWait(driver, configVariables.waitElement)
                 .until(ExpectedConditions.visibilityOf(elementForVerify));
-        elementForVerify.click();
+        //elementForVerify.click();
         String actual = elementForVerify.getText();
         assertEquals(actual, expected);
     }

@@ -2,8 +2,6 @@ package autoTests;
 
 import autoTests.pages.CarPage;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 
 public class TestSuite extends CustomMethods
@@ -23,10 +21,10 @@ public class TestSuite extends CustomMethods
 		carPage.getPage();
 		try {
 			carPage.enterValueToPriceFilterFrom(driver,from);
-			carPage.verifyPriceFilter(driver,carPage.span_priceFrom,"");
-
 			carPage.enterValueToPriceFilterTo(driver,to);
-			carPage.verifyPriceFilter(driver,carPage.span_priceTo,"");
+
+			carPage.verifyPriceFilter(driver,carPage.span_priceFrom,"Цена от (грн.)");
+			carPage.verifyPriceFilter(driver,carPage.span_priceTo,"Цена до (грн.)");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
